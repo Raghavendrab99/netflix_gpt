@@ -1,8 +1,8 @@
 import React, { useState, useRef } from 'react'
-
+import { auth } from '../Utils/firebase';
 import Header from './Header'
 import { checkValidData } from '../Utils/validate';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 
 const Login = () => {
     const [isSignInForm, setisSignInForm] = useState(true);
@@ -29,10 +29,9 @@ const Login = () => {
 
         if (!isSignInForm) {
             //signup logic
-            const auth = getAuth();
             createUserWithEmailAndPassword(auth, email.current.value, password.current.value)
                 .then((userCredential) => {
-                    // Signed up 
+                    // Signed up
                     const user = userCredential.user;
                     console.log(user);
                     // ...
@@ -45,10 +44,9 @@ const Login = () => {
                 });
         } else {
             //signin logic
-            const auth = getAuth();
             signInWithEmailAndPassword(auth, email.current.value, password.current.value)
                 .then((userCredential) => {
-                    // Signed in 
+                    // Signed in
                     const user = userCredential.user;
                     console.log(user);
                     // ...
@@ -73,7 +71,7 @@ const Login = () => {
                 <input
                     ref={email}
                     className='p-3 my-4 w-full bg-gray-600 rounded-md'
-                    type='text'
+                    type='email'
                     placeholder='Email Address'
                 />
                 <input
