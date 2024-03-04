@@ -2,12 +2,16 @@ import React, { useState, useRef } from 'react'
 
 import Header from './Header'
 import { checkValidData } from '../Utils/validate';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from '../Utils/firebase';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const [isSignInForm, setisSignInForm] = useState(true);
 
     const [errMessage, setErrMessage] = useState(null)
+
+    const navigate = useNavigate();
 
     const fullName = useRef(null);
     const email = useRef(null);
@@ -23,19 +27,21 @@ const Login = () => {
         console.log(email.current.value);
         console.log(password.current.value)
         const message = checkValidData(fullName.current.value, email.current.value, password.current.value);
-        console.log(message);
-        setErrMessage(message)
+        console.log(message)
+        setErrMessage(message);
+
         if (message) return; //if we have error message just return it dont go further otherwise go further
 
         if (!isSignInForm) {
             //signup logic
-            const auth = getAuth();
+
             createUserWithEmailAndPassword(auth, email.current.value, password.current.value)
                 .then((userCredential) => {
                     // Signed up 
                     const user = userCredential.user;
                     console.log(user);
-                    // ...
+                    navigate("/browse");
+
                 })
                 .catch((error) => {
                     const errorCode = error.code;
@@ -45,13 +51,12 @@ const Login = () => {
                 });
         } else {
             //signin logic
-            const auth = getAuth();
             signInWithEmailAndPassword(auth, email.current.value, password.current.value)
                 .then((userCredential) => {
                     // Signed in 
                     const user = userCredential.user;
                     console.log(user);
-                    // ...
+                    navigate("/browse");
                 })
                 .catch((error) => {
                     const errorCode = error.code;
